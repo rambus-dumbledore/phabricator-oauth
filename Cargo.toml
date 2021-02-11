@@ -1,11 +1,12 @@
 [package]
 name = "phabricator-oauth"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Ilya Volchenkov <lzhepelmen@google.com>"]
 edition = "2018"
 description = "Library for OAuth2 authentication on Phabricator"
 license = "MIT"
 keywords = ["oauth", "oauth2", "phabricator", "authentication"]
+repository = "https://github.com/lightwolf03/phabricator-oauth"
 
 [lib]
 name = "phabricator_oauth"
