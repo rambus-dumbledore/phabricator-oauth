@@ -1,15 +1,15 @@
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct PhabricatorUser {
     pub phid: String,
-    #[serde(rename(deserialize = "userName"))]
+    #[serde(rename(serialize = "userName", deserialize = "userName"))]
     pub user_name: String,
-    #[serde(rename(deserialize = "realName"))]
+    #[serde(rename(serialize = "realName", deserialize = "realName"))]
     pub real_name: String,
     pub image: String,
     pub uri: String,
     pub roles: Vec<String>,
-    #[serde(rename(deserialize = "primaryEmail"))]
+    #[serde(rename(serialize = "primaryEmail", deserialize = "primaryEmail"))]
     pub primary_email: String
 }

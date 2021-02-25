@@ -1,4 +1,7 @@
 mod client;
 mod user;
 
-pub mod prelude;
+pub use oauth2::TokenResponse;
+
+pub use user::PhabricatorUser;
+pub use client::PhabOAuthClient;

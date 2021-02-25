@@ -6,7 +6,7 @@
 
 Example
 ```rust
-use phabricator_oauth::prelude::*;
+use phabricator_oauth::*;
 ...
 let phid = String::from("PHABRICATOR_ID");
 let secret = String::from("PHABRICATOR_SECRET");
