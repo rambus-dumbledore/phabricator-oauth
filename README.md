@@ -15,13 +15,13 @@ let phabricator_url = String::from("https://phabricator.yourdomain.com");
 
 let client = PhabOAuthClient::new(phid, secret, redirect_url, phabricator_url).unwrap();
 ...
-// Getting URL for authentication on the phabricator
-let redirect_url = client.get_auth_url().unwrap();
+// Getting URL and CSRF token for authentication on the phabricator
+let (redirect_url, _csrf_token) = client.get_auth_url().unwrap();
 ...
 // Getting OAuth token. Code will be in GET parameters in your /auth handler
-let token = client.get_token(code.to_string()).unwrap();
+let token = client.get_token(code).unwrap();
 let access_token = token.access_token();
 ...
 // Getting current user info
-let user = client.get_user(access_token).unwrap();
+let user = client.get_user(access_token).await.unwrap();
 ```

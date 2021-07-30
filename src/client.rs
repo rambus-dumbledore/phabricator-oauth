@@ -45,15 +45,15 @@ impl PhabOAuthClient {
         )
     }
 
-    pub fn get_auth_url(&self) -> Result<Url> {
+    pub fn get_auth_url(&self) -> Result<(Url, CsrfToken)> {
         let url = RedirectUrl::new(self.redirect_url.clone())?;
 
-        let (auth_url, _csrf_token) = self.client
+        let (auth_url, csrf_token) = self.client
             .authorize_url(CsrfToken::new_random)
             .set_redirect_uri(Cow::Owned(url))
             .url();
 
-        Ok(auth_url)
+        Ok((auth_url, csrf_token))
     }
 
     pub async fn get_token(&self, code: String) -> Result<BasicTokenResponse> {
@@ -67,7 +67,7 @@ impl PhabOAuthClient {
     pub async fn get_user(&self, token: &AccessToken) -> Option<PhabricatorUser> {
         let request_url = format!("{}/api/user.whoami?access_token={}", self.phabricator_url, token.secret());
         let response = reqwest::get(request_url.as_str()).await.unwrap().text().await.unwrap();
-        let user_result: OAuthResponse<PhabricatorUser>= serde_json::from_str(response.as_str()).unwrap();
+        let user_result: OAuthResponse<PhabricatorUser> = serde_json::from_str(response.as_str()).unwrap();
         user_result.result
     }
 }
