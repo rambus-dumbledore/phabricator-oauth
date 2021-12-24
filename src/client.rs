@@ -9,15 +9,16 @@ use serde_json;
 use std::borrow::Cow;
 use serde::{Deserialize};
 
+use crate::error::PhabOAuthError;
 use crate::user::PhabricatorUser;
 
-type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
+type Result<T> = std::result::Result<T, PhabOAuthError>;
 
 #[derive(Deserialize, Debug)]
 struct OAuthResponse<T> {
     result: Option<T>,
-    error_code: Option<String>,
-    error_info: Option<String>
+    // error_code: Option<String>,
+    // error_info: Option<String>
 }
 
 pub struct PhabOAuthClient {
@@ -64,10 +65,10 @@ impl PhabOAuthClient {
         Ok(token_response)
     }
 
-    pub async fn get_user(&self, token: &AccessToken) -> Option<PhabricatorUser> {
+    pub async fn get_user(&self, token: &AccessToken) -> Result<Option<PhabricatorUser>> {
         let request_url = format!("{}/api/user.whoami?access_token={}", self.phabricator_url, token.secret());
-        let response = reqwest::get(request_url.as_str()).await.unwrap().text().await.unwrap();
-        let user_result: OAuthResponse<PhabricatorUser> = serde_json::from_str(response.as_str()).unwrap();
-        user_result.result
+        let response = reqwest::get(request_url.as_str()).await?.text().await?;
+        let user_result: OAuthResponse<PhabricatorUser> = serde_json::from_str(response.as_str())?;
+        Ok(user_result.result)
     }
 }

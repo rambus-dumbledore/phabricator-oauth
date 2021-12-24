@@ -19,7 +19,7 @@ let client = PhabOAuthClient::new(phid, secret, redirect_url, phabricator_url).u
 let (redirect_url, _csrf_token) = client.get_auth_url().unwrap();
 ...
 // Getting OAuth token. Code will be in GET parameters in your /auth handler
-let token = client.get_token(code).unwrap();
+let token = client.get_token(code).await.unwrap();
 let access_token = token.access_token();
 ...
 // Getting current user info

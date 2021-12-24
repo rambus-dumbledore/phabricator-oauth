@@ -1,12 +1,12 @@
 [package]
 name = "phabricator-oauth"
-version = "0.1.6"
+version = "0.1.7"
 authors = ["Ilya Volchenkov <lzhepelmen@gmail.com>"]
-edition = "2018"
+edition = "2021"
 description = "Library for OAuth2 authentication on Phabricator"
 license = "MIT"
 keywords = ["oauth", "oauth2", "phabricator", "authentication"]
-repository = "https://github.com/rambus-dumbledore/phabricator-oauth"
+repository = "https://github.com/zryambus/phabricator-oauth"
 
 [lib]
 name = "phabricator_oauth"
@@ -17,3 +17,4 @@ oauth2 = { version = "4" }
 serde = "1.0"
 serde_json = "1.0"
 reqwest = { version = "0.11", default-features = false, features = ["rustls-tls"] }
+thiserror = "1"
