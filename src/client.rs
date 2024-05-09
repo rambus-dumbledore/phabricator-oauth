@@ -1,13 +1,17 @@
 use oauth2::{
-    ClientId, ClientSecret, AuthUrl, TokenUrl, RedirectUrl, CsrfToken, AuthorizationCode, AccessToken, StandardRevocableToken,
-    basic::{BasicClient, BasicErrorResponse, BasicTokenResponse, BasicTokenType, BasicTokenIntrospectionResponse, BasicRevocationErrorResponse},
+    basic::{
+        BasicClient, BasicErrorResponse, BasicRevocationErrorResponse, BasicTokenIntrospectionResponse,
+        BasicTokenResponse, BasicTokenType
+    },
+    http::{HeaderMap, Method},
     reqwest::async_http_client,
     url::Url,
+    AccessToken, AuthUrl, AuthorizationCode, ClientId, ClientSecret, CsrfToken, HttpRequest, RedirectUrl,
+    StandardRevocableToken, TokenUrl
 };
-use reqwest;
 use serde_json;
 use std::borrow::Cow;
-use serde::{Deserialize};
+use serde::Deserialize;
 
 use crate::error::PhabOAuthError;
 use crate::user::PhabricatorUser;
@@ -67,8 +71,15 @@ impl PhabOAuthClient {
 
     pub async fn get_user(&self, token: &AccessToken) -> Result<Option<PhabricatorUser>> {
         let request_url = format!("{}/api/user.whoami?access_token={}", self.phabricator_url, token.secret());
-        let response = reqwest::get(request_url.as_str()).await?.text().await?;
-        let user_result: OAuthResponse<PhabricatorUser> = serde_json::from_str(response.as_str())?;
+        let request = HttpRequest{
+            url: Url::parse(request_url.as_str())?,
+            headers: HeaderMap::new(),
+            method: Method::GET,
+            body: vec![]
+        };
+        let response = async_http_client(request).await?;
+        let json = String::from_utf8(response.body)?;
+        let user_result: OAuthResponse<PhabricatorUser> = serde_json::from_str(json.as_str())?;
         Ok(user_result.result)
     }
 }

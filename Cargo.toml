@@ -1,6 +1,6 @@
 [package]
 name = "phabricator-oauth"
-version = "0.1.7"
+version = "0.1.8"
 authors = ["Ilya Volchenkov <lzhepelmen@gmail.com>"]
 edition = "2021"
 description = "Library for OAuth2 authentication on Phabricator"
@@ -16,5 +16,4 @@ path = "src/lib.rs"
 oauth2 = { version = "4" }
 serde = "1.0"
 serde_json = "1.0"
-reqwest = { version = "0.11", default-features = false, features = ["rustls-tls"] }
 thiserror = "1"
